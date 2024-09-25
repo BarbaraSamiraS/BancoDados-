@@ -80,7 +80,10 @@ USE dbConfeitaria
 			EXEC spInserirProdutos 'Coxinha frango', 25.00, 4
 			EXEC spInserirProdutos 'Esfiha came', 27.00, 4
 			EXEC spInserirProdutos 'Folhado queijo', 31.00, 4
-			EXEC spInserirProdutos 'Risoles misto', 29.00, 4
+			EXEC spInserirProdutos 'Risoles de feijao', 29.00, 40
+
+			-- Teste com codigo inexistente e nome repetido  
+			EXEC spInserirProdutos 'Risoles misto', 29.00, 400
 -------------------------------------------------------------------------------------------------------------------------
 		-- SELECTS 
 			SELECT * FROM tbProduto
@@ -110,6 +113,7 @@ USE dbConfeitaria
 				IF EXISTS (SELECT cpfCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente)
 					BEGIN
 						PRINT ('Cliente cpf '+@cpfCliente +' já cadastrado')
+						
 					END
 				IF (SELECT bairroCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente) <> 'Guaianases' OR (SELECT bairroCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente) <> 'Itaquera'
 					BEGIN
@@ -129,7 +133,11 @@ USE dbConfeitaria
 			EXEC spCadastrarCliente 'Celia Nogueira', '1992-06-06 00:00:00 ', 'Rua Andes', 234, '08.456-090', 'Guaianases','Analândia','SP', '675.562.799-95', 'F'
 			EXEC spCadastrarCliente 'Paulo Cesar Siqueira', '1984-04-04 00:00:00 ', 'Rua Castelo do Piauí', 232, '08.109-000', 'Itaquera','Alambari','SP', '222.222.222-22' , 'M'
 			EXEC spCadastrarCliente 'Rodrigo Favaroni', '1991-04-09 00:00:00 ', 'Rua Sansão Castelo Branco', 10, '08.431-090', 'Guaianases','São Paulo','SP', '523.743.789-95', 'M'
-			EXEC spCadastrarCliente 'Flávia Regina Brito', '1992-04-22 00:00:00 ', 'Rua Mariano Moro', 300, '08.200-123', 'Itaquera','São Paulo','SP', '123.543.789-45' , 'F'
+			EXEC spCadastrarCliente 'Flávia Regina Brito', '1992-22-04 00:00:00 ', 'Rua Mariano Moro', 300, '08.200-123', 'Penha','São Paulo','SP', '123.543.789' , 'F'
+
+			-- Teste com Bairro diferente e CPF repetido: 
+			EXEC spCadastrarCliente 'Samira Fatah', '1990-05-05 00:00:00', 'Rua Aguapeí', 1000, '08.090-000', 'Cidade Tiradente','Araraquara','SP', '127.828.789-99','F'
+
 -------------------------------------------------------------------------------------------------------------------------
 		-- SELECTS 
 			SELECT * FROM tbCliente
@@ -154,22 +162,25 @@ USE dbConfeitaria
 				DECLARE @codEncomenda INT
 				DECLARE @nomeCliente VARCHAR(255)
 
-				IF EXISTS (SELECT cpfCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente)
+				IF NOT EXISTS (SELECT cpfCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente)
 					BEGIN
 						PRINT ('Não foi possível efetivar a encomenda pois o cliente '+@cpfCliente +' não está cadastrado')
+						RETURN  
 					END
-				ELSE IF @dataEntregaEncomenda < @dataEncomenda
+				IF @dataEntregaEncomenda < @dataEncomenda
 					BEGIN
 						PRINT ('Não foi possivel entregar uma encomenda antes da encomenda ser realizada')
+						RETURN  
 					END
 				ELSE
-				SET @nomeCliente = (SELECT nomeCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente)
-				BEGIN
-					INSERT INTO tbEncomenda(dataEncomenda,codCliente,valorTotalEncomenda,dataEntregaEncomenda)
-					VALUES (@dataEncomenda,@codCliente,@valorTotalEncomenda,@dataEntregaEncomenda)
-					SET @codEncomenda = (SELECT MAX(codEncomenda) FROM tbEncomenda) 
-					PRINT('Encomenda ' +CONVERT(VARCHAR(5), @codEncomenda) +' para o cliente '+@nomeCliente+' efetuada com sucesso')
-				END
+					SET @nomeCliente = (SELECT nomeCliente FROM tbCliente WHERE cpfCliente LIKE @cpfCliente)
+					BEGIN
+						INSERT INTO tbEncomenda(dataEncomenda,codCliente,valorTotalEncomenda,dataEntregaEncomenda)
+						VALUES (@dataEncomenda,@codCliente,@valorTotalEncomenda,@dataEntregaEncomenda)
+						SET @codEncomenda = (SELECT MAX(codEncomenda) FROM tbEncomenda) 
+						PRINT('Encomenda ' +CONVERT(VARCHAR(5), @codEncomenda) +' para o cliente '+@nomeCliente+' efetuada com sucesso')
+					END
+				
 			END 
 -------------------------------------------------------------------------------------------------------------------------
 		-- Resultado: 
@@ -179,6 +190,9 @@ USE dbConfeitaria
 			EXEC spEncomenda '222.222.222-22', '2015-06-10 00:00:00', 1, 250, '2015-12-10 00:00:00'
 			EXEC spEncomenda '675.562.799-95', '2015-05-10 00:00:00', 4, 150, '2015-12-10 00:00:00'
 
+		-- Teste com CPF inexistente: 
+			EXEC spEncomenda '127.808.789-99', '2015-08-08 00:00:00', 1, 450, '2015-08-12 00:00:00'
+
 -------------------------------------------------------------------------------------------------------------------------
 		-- SELECTS 
 			SELECT * FROM tbEncomenda
@@ -187,7 +201,7 @@ USE dbConfeitaria
 	--e)Ao adicionar a encomenda, criar uma Stored procedure, para que sejam inseridos os itens da encomenda conforme tabela a seguir.
 
 		-- PROCEDURE: spInserirItens
-		
+		drop PROCEDURE spInserirItens
 		CREATE PROCEDURE spInserirItens
 				@codEncomenda INT 
 				,@codProduto INT 
@@ -203,6 +217,7 @@ USE dbConfeitaria
 					IF NOT EXISTS (SELECT codProduto FROM tbProduto WHERE codProduto LIKE @codProduto)
 					BEGIN
 						PRINT ('Não é possivel inserir! Código inexistente ' +CONVERT(VARCHAR(5), @codProduto) )
+						RETURN
 					END
 
 					BEGIN
@@ -225,6 +240,9 @@ USE dbConfeitaria
 			EXEC spInserirItens 4, 2, 3.5, 150.00
 			EXEC spInserirItens 4, 3, 2.2, 100.00
 			EXEC spInserirItens 5, 6, 3.4, 150.00
+
+		-- Teste com CODIGO ENCOMENDA e CODIGO PRODUTO inexistentes: 
+			EXEC spInserirItens 89,56,2.5,105.00
 -------------------------------------------------------------------------------------------------------------------------
 		-- SELECTS 
 			SELECT * FROM tbItensEncomenda
@@ -383,7 +401,7 @@ USE dbConfeitaria
 
 -------------------------------------------------------------------------------------------------------------------------
 		-- Resultado: 
-			EXEC spExcluirItemEncomenda 2, 10
+			EXEC spExcluirItemEncomenda 22, 12
 -------------------------------------------------------------------------------------------------------------------------
 		-- SELECTS 
 			SELECT * FROM tbItensEncomenda
