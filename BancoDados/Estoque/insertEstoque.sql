@@ -1,3 +1,6 @@
+-- Barbara Samira Santiesteban Saravia
+-- Rebeca Elaine Pimentel da Silva
+
 USE dbEstoque
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -33,6 +36,43 @@ INSERT INTO tblVendas VALUES
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- Tabela do Fornecedor
+
+INSERT INTO tblFornecedor VALUES
+('Atacadão','Carlos Santos'),
+('Assai','Maria Stella'),
+('Roldão','Paulo César')
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Tabela do Fabricante
+
+INSERT INTO tblFabricante VALUES
+('Unilever'),
+('P&G'),
+('Bunge')
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Tabela de Produto
+
+INSERT INTO tblProduto VALUES
+('Amaciante Downy', 5.76, 1500, 2, 1),
+('Amaciante Comfort', 5.45, 2300, 1, 1),
+('Sabão em pó OMO', 5.99, 1280, 1, 2),
+('Margarina Qually', 4.76, 2500, 3, 1),
+('Salsicha Hot Dog Sadia', 6.78, 2900, 3, 2),
+('Mortadela Perdigão', 2.50, 1200, 3, 3),
+('Hamburger Sadia', 9.89, 1600, 3, 1),
+('Fralda Pampers', 36.00, 340, 2, 3),
+('Xampu Seda', 5.89, 800, 1, 2),
+('Condicionador Seda', 6.50, 700, 1, 3)
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 -- Tabela de Itens da Venda 
 
 INSERT INTO tblItensVenda VALUES
@@ -55,34 +95,3 @@ INSERT INTO tblItensVenda VALUES
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela de Produto
-
-INSERT INTO tblProduto VALUES
-('Amaciante Downy', 5.76, 1500, 2, 1),
-('Amaciante Comfort', 5.45, 2300, 1, 1),
-('Sabão em pó OMO', 5.99, 1280, 1, 2),
-('Margarina Qually', 4.76, 2500, 3, 1),
-('Salsicha Hot Dog Sadia', 6.78, 2900, 3, 2),
-('Mortadela Perdigão', 2.50, 1200, 3, 3),
-('Hamburger Sadia', 9.89, 1600, 3, 1),
-('Fralda Pampers', 36.00, 340, 2, 3),
-('Xampu Seda', 5.89, 800, 1, 2),
-('Condicionador Seda', 6.50, 700, 1, 3)
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
--- Tabela do Fornecedor
-
-INSERT INTO tblFornecedor VALUES
-('Atacadão','Carlos Santos'),
-('Assai','Maria Stella'),
-('Roldão','Paulo César')
-
--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
--- Tabela do Fabricante
-
-INSERT INTO tblFabricante VALUES
-('Unilever'),
-('P&G'),
-('Bunge')
