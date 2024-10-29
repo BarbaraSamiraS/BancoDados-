@@ -1,3 +1,7 @@
+-- Barbara Samira Santiesteban Saravia
+-- Rebeca Elaine Pimentel da Silva
+
+
 CREATE DATABASE dbEstoque
 GO
 
@@ -33,17 +37,26 @@ CREATE TABLE tblVendas (
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela de Itens da Venda 
+-- Tabela do Fabricante
 
-CREATE TABLE tblItensVenda (
-	codItensVenda INT PRIMARY KEY IDENTITY(1,1)
-	, codVenda INT FOREIGN KEY REFERENCES tblVendas
-	, codProduto INT FOREIGN KEY REFERENCES tblProduto 
-	, quantidadeDeItensVenda INT 
-	, subTotalItensVenda FLOAT
+CREATE TABLE tblFabricante (
+	codFabricante INT PRIMARY KEY IDENTITY(1,1)
+	, nomeFabricante VARCHAR(200) 
 )
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Tabela do Fornecedor
+
+CREATE TABLE tblFornecedor (
+	codFornecedor INT PRIMARY KEY IDENTITY(1,1)
+	, nomeFornecedor VARCHAR(200) 
+	, contatoFornecedor VARCHAR(100) 
+)
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 -- Tabela de Produto
 
@@ -58,19 +71,15 @@ CREATE TABLE tblProduto (
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela do Fornecedor
+-- Tabela de Itens da Venda 
 
-CREATE TABLE tblFornecedor (
-	codFornecedor INT PRIMARY KEY IDENTITY(1,1)
-	, nomeFornecedor VARCHAR(200) 
-	, contatoFornecedor VARCHAR(100) 
+CREATE TABLE tblItensVenda (
+	codItensVenda INT PRIMARY KEY IDENTITY(1,1)
+	, codVenda INT FOREIGN KEY REFERENCES tblVendas
+	, codProduto INT FOREIGN KEY REFERENCES tblProduto 
+	, quantidadeDeItensVenda INT 
+	, subTotalItensVenda FLOAT
 )
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela do Fabricante
-
-CREATE TABLE tblFabricante (
-	codFabricante INT PRIMARY KEY IDENTITY(1,1)
-	, nomeFabricante VARCHAR(200) 
-)
